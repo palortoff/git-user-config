@@ -1,6 +1,6 @@
 {
   "name": "git-user-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Configure your git user for current repo",
   "main": "index.js",
   "scripts": {},
