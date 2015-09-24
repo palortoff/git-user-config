@@ -1,12 +1,13 @@
 {
   "name": "git-user-config",
   "version": "1.0.0",
-  "description": "Configure git user for current repo",
+  "description": "Configure your git user for current repo",
   "main": "index.js",
   "scripts": {},
   "author": "palortoff",
   "license": "MIT",
   "dependencies": {
+    "child-process-promise": "^1.1.0",
     "home-dir": "^1.0.0",
     "lodash": "^3.10.1",
     "minimist": "^1.2.0",

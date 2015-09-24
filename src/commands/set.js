@@ -1,7 +1,7 @@
 'use strict';
 
 let config = require('./../config');
-let exec = require('child_process').exec;
+let exec = require('child-process-promise').exec;
 
 module.exports = set;
 
@@ -10,19 +10,27 @@ function set(options) {
     let user = config.get()[id];
     if (!user || !user.name || !user.email) throw new Error(`User for ${id} not configured`);
 
-    try {
-        exec(`git config user.name ${user.name}`, handleError);
-        exec(`git config user.email ${user.email}`, handleError);
-
-        console.log("user configured:");
-        console.log(JSON.stringify(user, null, 2));
-    } catch (e) {
-        console.error(error.message);
-    }
+    setUserName(user)
+        .then(setUserEmail)
+        .then(confirm)
+        .catch(handleError);
 }
 
-//noinspection JSUnusedLocalSymbols
-function handleError(error, stdout, stderr) {
-    if (!!stderr) throw new Error(stderr);
-    if (error) throw error;
+function setUserName(user) {
+    return exec(`git config user.name "${user.name}"`)
+        .then(function() {return user;});
+}
+
+function setUserEmail(user) {
+    return exec(`git config user.email ${user.email}`)
+        .then(function() {return user;});
+}
+
+function confirm(user) {
+    console.log("user configured:");
+    console.log(JSON.stringify(user, null, 2));
+}
+
+function handleError(error) {
+    console.error('\n' + error.message);
 }
