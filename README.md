@@ -1,3 +1,10 @@
+Do you use different user names and/or email for your github projects, work projects, private personal projects?
+
+Then you use ``git config`` a lot.
+
+With ``git-user-config`` you can save these different users globally and configure a new repo with a single command using the user record id.
+No more misspelled email addresses and user names...
+
 # Install
 
     npm install -g git-user-config
@@ -22,7 +29,7 @@ record saved
 
     git-user-config --set user1
 
-This will call git config to set user.name and user.email
+This will call ``git config`` to set user.name and user.email
 
 ````
 $ git config -l | grep user
