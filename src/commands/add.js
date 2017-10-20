@@ -5,27 +5,35 @@ module.exports = add
 const read = require('read')
 const config = require('../config')
 
-const record = {id: 'id', name: 'name', email: 'email'}
-
 function add () {
   console.log('Add new user record\n')
-  readProperty('id')
-    .then(() => readProperty('name'))
-    .then(() => readProperty('email'))
-    .then(() => config.add(record.id, record))
-    .then(config.save)
-    .then(confirm)
-    .catch(handleError)
-}
-
-function readProperty (prop) {
-  return new Promise((resolve, reject) => {
-    read({prompt: `${prop}:`}, (error, result) => {
-      if (error) reject(error)
-      record[prop] = result
-      resolve()
+  read({prompt: 'Identifier:'}, (err, id) => {
+    if (err) return handleError(err)
+    console.log('\nEnter property names like `user.email`')
+    readProperties((err, record) => {
+      if (err) return handleError(err)
+      config.add(id, record)
+      config.save()
+        .then(confirm)
+        .catch(handleError)
     })
   })
+}
+
+function readProperties (cb) {
+  const record = {}
+  loop()
+  function loop () {
+    read({prompt: 'Property name (none to end):'}, (err, prop) => {
+      if (err) return cb(err)
+      if (prop.trim().length === 0) return cb(null, record)
+      read({prompt: 'Value:'}, (err, val) => {
+        if (err) return cb(err)
+        record[prop] = val
+        loop()
+      })
+    })
+  }
 }
 
 function confirm () {
