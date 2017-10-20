@@ -4,8 +4,13 @@
   "description": "Configure your git user for current repo",
   "main": "index.js",
   "scripts": {
-    "lint": "standard | snazzy"
+    "lint": "standard | snazzy",
+    "test": "tap 'test/**/*.test.js'"
   },
+  "precommit": [
+    "lint",
+    "test"
+  ],
   "author": "palortoff",
   "license": "MIT",
   "dependencies": {
@@ -20,7 +25,10 @@
     "url": "https://github.com/palortoff/git-user-config"
   },
   "devDependencies": {
+    "mock-require": "^2.0.2",
+    "pre-commit": "^1.2.2",
     "snazzy": "^7.0.0",
-    "standard": "^10.0.3"
+    "standard": "^10.0.3",
+    "tap": "^10.7.2"
   }
 }

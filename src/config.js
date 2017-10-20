@@ -1,8 +1,8 @@
 'use strict'
 
 const fs = require('fs')
-const os = require('os')
-const path = require('path')
+const configPath = require('./configPath')
+const loadConfig = require('./loadConfig')
 
 module.exports = {
   get: get,
@@ -11,34 +11,26 @@ module.exports = {
   remove
 }
 
-const configPath = path.join(os.homedir(), '.git-user-config.json')
-let config
-load()
+const config = loadConfig()
 
 function get () {
   return config
 }
 
-function load () {
-  try {
-    config = require(configPath)
-  } catch (e) {
-    config = {}
-  }
-}
-
 function save () {
   return new Promise((resolve, reject) => {
-    fs.writeFile(configPath, JSON.stringify(config), (err) => {
+    fs.writeFile(configPath(), JSON.stringify(config), (err) => {
       if (err) return reject(err)
       resolve()
     })
   })
 }
 
-function add (record) {
-  if (config[record.id]) throw new Error(`Record "${record.id}" already exists.`)
-  config[record.id] = {name: record.name, email: record.email}
+function add (id, record) {
+  if (config[id]) throw new Error(`Record "${id}" already exists.`)
+  const _record = Object.assign({}, record)
+  if (_record.id) delete _record.id
+  config[id] = _record
 }
 
 function remove (id) {

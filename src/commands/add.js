@@ -10,9 +10,9 @@ const record = {id: 'id', name: 'name', email: 'email'}
 function add () {
   console.log('Add new user record\n')
   readProperty('id')
-    .then(readProperty.bind(null, 'name'))
-    .then(readProperty.bind(null, 'email'))
-    .then(config.add.bind(null, record))
+    .then(() => readProperty('name'))
+    .then(() => readProperty('email'))
+    .then(() => config.add(record.id, record))
     .then(config.save)
     .then(confirm)
     .catch(handleError)
