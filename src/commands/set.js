@@ -1,7 +1,7 @@
 'use strict'
 
-let config = require('./../config')
-let exec = require('child-process-promise').exec
+const config = require('./../config')
+const exec = require('child_process').exec
 
 module.exports = set
 
@@ -11,19 +11,28 @@ function set (options) {
   if (!user || !user.name || !user.email) throw new Error(`User for ${id} not configured`)
 
   setUserName(user)
-        .then(setUserEmail)
-        .then(confirm)
-        .catch(handleError)
+    .then(setUserEmail)
+    .then(confirm)
+    .catch(handleError)
+}
+
+function setValue (prop, val) {
+  return new Promise((resolve, reject) => {
+    const proc = exec(`git config --local ${prop} '${val}'`)
+    proc.on('error', (err) => reject(err))
+    proc.on('close', (code) => {
+      if (code !== 0) return reject(Error(`Invalid result code: ${code}`))
+      resolve()
+    })
+  })
 }
 
 function setUserName (user) {
-  return exec(`git config user.name "${user.name}"`)
-        .then(function () { return user })
+  return setValue('user.name', user.name).then(() => user)
 }
 
 function setUserEmail (user) {
-  return exec(`git config user.email ${user.email}`)
-        .then(function () { return user })
+  return setValue('user.email', user.email).then(() => user)
 }
 
 function confirm (user) {

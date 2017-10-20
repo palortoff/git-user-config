@@ -1,7 +1,8 @@
 'use strict'
 
-let homeDir = require('home-dir')
-let qfs = require('q-io/fs')
+const fs = require('fs')
+const os = require('os')
+const path = require('path')
 
 module.exports = {
   get: get,
@@ -10,7 +11,7 @@ module.exports = {
   remove
 }
 
-let configPath = homeDir('/.git-user-config.json')
+const configPath = path.join(os.homedir(), '.git-user-config.json')
 let config
 load()
 
@@ -27,7 +28,12 @@ function load () {
 }
 
 function save () {
-  return qfs.write(configPath, JSON.stringify(config))
+  return new Promise((resolve, reject) => {
+    fs.writeFile(configPath, JSON.stringify(config), (err) => {
+      if (err) return reject(err)
+      resolve()
+    })
+  })
 }
 
 function add (record) {

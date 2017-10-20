@@ -16,6 +16,7 @@ try {
 command()(options)
 
 function command () {
+  if (!options) return () => {}
   if (options.add) return require('./src/commands/add')
   if (options.list) return require('./src/commands/list')
   if (options.remove) return require('./src/commands/remove')

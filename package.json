@@ -9,12 +9,7 @@
   "author": "palortoff",
   "license": "MIT",
   "dependencies": {
-    "child-process-promise": "^1.1.0",
-    "home-dir": "^1.0.0",
-    "lodash": "^3.10.1",
     "minimist": "^1.2.0",
-    "q": "^1.4.1",
-    "q-io": "^1.13.1",
     "read": "^1.0.7"
   },
   "bin": {

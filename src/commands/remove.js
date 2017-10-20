@@ -2,14 +2,15 @@
 
 module.exports = remove
 let config = require('../config')
-let q = require('q')
 
 function remove (options) {
-  q.when()
-        .then(config.remove.bind(null, options.remove))
-        .then(config.save)
-        .then(confirm)
-        .catch(handleError)
+  try {
+    config.remove(options.remove)
+    config.save()
+      .then(confirm, handleError)
+  } catch (e) {
+    console.error('\n' + e.message)
+  }
 }
 
 function confirm () {

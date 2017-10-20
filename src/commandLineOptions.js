@@ -1,13 +1,11 @@
 'use strict'
 
-let _ = require('lodash')
-
 module.exports = commandLineOptions
 
 function commandLineOptions () {
-  let argv = require('minimist')(process.argv.slice(2))
+  const argv = require('minimist')(process.argv.slice(2))
 
-  let config = {
+  const config = {
     list: argv.l || argv.list,
     add: argv.a || argv.add,
     remove: argv.r || argv.remove,
@@ -27,8 +25,14 @@ function requireOptionSanity (config) {
 
 function requireExactlyOneCommandSet (config) {
   let commandFound = false
+  const commands = [
+    'list',
+    'add',
+    'remove',
+    'set'
+  ]
 
-  _.forEach(['list', 'add', 'remove', 'set'], function (command) {
+  commands.forEach((command) => {
     if (commandFound && config[command]) throw new Error('Please specify only one command')
     if (config[command]) commandFound = true
   })

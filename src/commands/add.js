@@ -2,26 +2,25 @@
 
 module.exports = add
 
-let read = require('read')
-let q = require('q')
-let config = require('../config')
+const read = require('read')
+const config = require('../config')
 
-let record = {id: 'id', name: 'name', email: 'email'}
+const record = {id: 'id', name: 'name', email: 'email'}
 
 function add () {
   console.log('Add new user record\n')
   readProperty('id')
-        .then(readProperty.bind(null, 'name'))
-        .then(readProperty.bind(null, 'email'))
-        .then(config.add.bind(null, record))
-        .then(config.save)
-        .then(confirm)
-        .catch(handleError)
+    .then(readProperty.bind(null, 'name'))
+    .then(readProperty.bind(null, 'email'))
+    .then(config.add.bind(null, record))
+    .then(config.save)
+    .then(confirm)
+    .catch(handleError)
 }
 
 function readProperty (prop) {
-  return q.Promise(function (resolve, reject) {
-    read({prompt: `${prop}:`}, function (error, result) {
+  return new Promise((resolve, reject) => {
+    read({prompt: `${prop}:`}, (error, result) => {
       if (error) reject(error)
       record[prop] = result
       resolve()
