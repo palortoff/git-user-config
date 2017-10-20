@@ -1,43 +1,41 @@
-'use strict';
+'use strict'
 
-let homeDir = require('home-dir');
-let qfs = require("q-io/fs");
+let homeDir = require('home-dir')
+let qfs = require('q-io/fs')
 
 module.exports = {
-    get: get,
-         save,
-         add,
-         remove
-};
-
-let configPath= homeDir('/.git-user-config.json');
-let config;
-load();
-
-function get() {
-    return config;
+  get: get,
+  save,
+  add,
+  remove
 }
 
-function load() {
-    try {
-        config = require(configPath);
-    }
-    catch (e) {
-        config = {}
-    }
+let configPath = homeDir('/.git-user-config.json')
+let config
+load()
+
+function get () {
+  return config
 }
 
-function save() {
-    return qfs.write(configPath, JSON.stringify(config));
+function load () {
+  try {
+    config = require(configPath)
+  } catch (e) {
+    config = {}
+  }
 }
 
-function add(record) {
-    if (config[record.id]) throw new Error(`Record "${record.id}" already exists.`);
-    config[record.id] = {name: record.name, email: record.email};
+function save () {
+  return qfs.write(configPath, JSON.stringify(config))
 }
 
-function remove(id) {
-    if (!config[id]) throw new Error(`Record "${id}" does not exist.`);
-    delete config[id];
+function add (record) {
+  if (config[record.id]) throw new Error(`Record "${record.id}" already exists.`)
+  config[record.id] = {name: record.name, email: record.email}
 }
 
+function remove (id) {
+  if (!config[id]) throw new Error(`Record "${id}" does not exist.`)
+  delete config[id]
+}

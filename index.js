@@ -1,24 +1,23 @@
 #!/usr/bin/env node
 
-'use strict';
+'use strict'
 
-var printUsage = require('./src/printUsage');
-var cli = require('./src/commandLineOptions');
+var printUsage = require('./src/printUsage')
+var cli = require('./src/commandLineOptions')
 
-let options;
+let options
 try {
-    options = cli();
-}
-catch (error) {
-    console.error(error.message, '\n');
-    printUsage();
+  options = cli()
+} catch (error) {
+  console.error(error.message, '\n')
+  printUsage()
 }
 
-command()(options);
+command()(options)
 
-function command() {
-    if (options.add) return require('./src/commands/add');
-    if (options.list) return require('./src/commands/list');
-    if (options.remove) return require('./src/commands/remove');
-    if (options.set) return require('./src/commands/set');
+function command () {
+  if (options.add) return require('./src/commands/add')
+  if (options.list) return require('./src/commands/list')
+  if (options.remove) return require('./src/commands/remove')
+  if (options.set) return require('./src/commands/set')
 }

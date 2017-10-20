@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-module.exports = list;
+module.exports = list
 
-var config = require('../config');
+var config = require('../config')
 
-function list() {
-    console.log('Saved records:')
-    console.log(JSON.stringify(config.get(), null, 2));
+function list () {
+  console.log('Saved records:')
+  console.log(JSON.stringify(config.get(), null, 2))
 }

@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-module.exports = printUsage;
+module.exports = printUsage
 
-function printUsage() {
-    console.log(
+function printUsage () {
+  console.log(
         `git-user-config <command> [id]
 
 commands:

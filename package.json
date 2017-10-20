@@ -3,7 +3,9 @@
   "version": "1.0.2",
   "description": "Configure your git user for current repo",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "standard | snazzy"
+  },
   "author": "palortoff",
   "license": "MIT",
   "dependencies": {
@@ -21,5 +23,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/palortoff/git-user-config"
+  },
+  "devDependencies": {
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3"
   }
 }
