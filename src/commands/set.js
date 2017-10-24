@@ -22,9 +22,11 @@ function setValue (prop, val, setGlobal) {
   return new Promise((resolve, reject) => {
     const cmd = `git config ${setGlobal ? '--global' : '--local'} ${prop} '${val}'`
     const proc = exec(cmd)
+    let stderr = ''
+    proc.stderr.on('data', (d) => { stderr += d.toString() })
     proc.on('error', (err) => reject(err))
     proc.on('close', (code) => {
-      if (code !== 0) return reject(Error(`Invalid result code: ${code}`))
+      if (code !== 0) return reject(Error(`Invalid result code (${code}):\n${stderr}`))
       resolve()
     })
   })
