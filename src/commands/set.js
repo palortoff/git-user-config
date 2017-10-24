@@ -11,16 +11,17 @@ function set (options) {
   if (!obj) throw Error(`Config for ${id} not specified`)
 
   Object.keys(obj).forEach((key) => {
-    setValue(key, obj[key])
+    setValue(key, obj[key], options.global)
       .then(() => {})
       .catch(handleError)
   })
   confirm(obj)
 }
 
-function setValue (prop, val) {
+function setValue (prop, val, setGlobal) {
   return new Promise((resolve, reject) => {
-    const proc = exec(`git config --local ${prop} '${val}'`)
+    const cmd = `git config ${setGlobal ? '--global' : '--local'} ${prop} '${val}'`
+    const proc = exec(cmd)
     proc.on('error', (err) => reject(err))
     proc.on('close', (code) => {
       if (code !== 0) return reject(Error(`Invalid result code: ${code}`))
