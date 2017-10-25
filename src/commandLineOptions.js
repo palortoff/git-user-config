@@ -10,7 +10,8 @@ function commandLineOptions () {
       update: ['u'],
       remove: ['r'],
       set: ['s'],
-      global: ['g']
+      global: ['g'],
+      debug: ['d']
     },
     default: {
       list: false,
@@ -18,7 +19,8 @@ function commandLineOptions () {
       update: undefined,
       remote: undefined,
       set: undefined,
-      global: false
+      global: false,
+      debug: false
     }
   })
 
