@@ -1,21 +1,22 @@
-'use strict';
+'use strict'
 
-module.exports = remove;
-let config = require('../config');
-let q = require('q');
+module.exports = remove
+const config = require('../config')
 
-function remove(options) {
-    q.when()
-        .then(config.remove.bind(null, options.remove))
-        .then(config.save)
-        .then(confirm)
-        .catch(handleError);
+function remove (options) {
+  try {
+    config.remove(options.remove)
+    config.save()
+      .then(confirm, handleError)
+  } catch (e) {
+    console.error(e.message)
+  }
 }
 
-function confirm() {
-    console.log('\nrecord removed\n');
+function confirm () {
+  console.log('\nrecord removed\n')
 }
 
-function handleError(error) {
-    console.error('\n' + error.message);
+function handleError (error) {
+  console.error(error.message)
 }

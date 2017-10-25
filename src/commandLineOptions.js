@@ -1,42 +1,59 @@
-'use strict';
+'use strict'
 
-let minimist = require('minimist');
-let _ = require('lodash');
+module.exports = commandLineOptions
 
-module.exports = commandLineOptions;
+function commandLineOptions () {
+  const argv = require('minimist')(process.argv.slice(2), {
+    alias: {
+      list: ['l'],
+      add: ['a'],
+      update: ['u'],
+      remove: ['r'],
+      set: ['s'],
+      global: ['g'],
+      debug: ['d']
+    },
+    default: {
+      list: false,
+      add: false,
+      update: undefined,
+      remote: undefined,
+      set: undefined,
+      global: false,
+      debug: false
+    }
+  })
 
-function commandLineOptions() {
-    let argv = require('minimist')(process.argv.slice(2));
+  requireOptionSanity(argv)
 
-    let config = {
-        list:   argv.l || argv.list,
-        add:    argv.a || argv.add,
-        remove: argv.r || argv.remove,
-        set:    argv.s || argv.set
-    };
-
-    requireOptionSanity(config);
-
-    return config;
+  return argv
 }
 
-function requireOptionSanity(config){
-    requireExactlyOneCommandSet(config);
-    requireIdForOption(config, 'remove');
-    requireIdForOption(config, 'set');
+function requireOptionSanity (config) {
+  requireExactlyOneCommandSet(config)
+  requireIdForOption(config, 'update')
+  requireIdForOption(config, 'remove')
+  requireIdForOption(config, 'set')
 }
 
-function requireExactlyOneCommandSet(config){
-    let commandFound = false;
+function requireExactlyOneCommandSet (config) {
+  let commandFound = false
+  const commands = [
+    'list',
+    'add',
+    'update',
+    'remove',
+    'set'
+  ]
 
-    _.forEach(['list', 'add', 'remove', 'set'], function(command){
-        if (commandFound && config[command]) throw new Error('Please specify only one command');
-        if (config[command]) commandFound = true;
-    });
+  commands.forEach((command) => {
+    if (commandFound && config[command]) throw new Error('Please specify only one command')
+    if (config[command]) commandFound = true
+  })
 
-    if (!commandFound) throw new Error("No command specified!")
+  if (!commandFound) throw new Error('No command specified!')
 }
 
-function requireIdForOption(config, command){
-    if (config[command] && config[command] === true) throw new Error(`command ${command} requires an id`)
+function requireIdForOption (config, command) {
+  if (config[command] && config[command] === true) throw new Error(`command ${command} requires an id`)
 }

@@ -1,38 +1,30 @@
-'use strict';
+'use strict'
 
-module.exports = add;
+module.exports = add
 
-let read = require('read');
-let q = require('q');
-let config = require('../config');
+const config = require('../config')
+const read = require('read')
+const readProperties = require('../readProperties')
 
-let record = {id:'id',name:'name',email:'email'};
-
-function add() {
-    console.log('Add new user record\n');
-    readProperty('id')
-        .then(readProperty.bind(null, 'name'))
-        .then(readProperty.bind(null, 'email'))
-        .then(config.add.bind(null, record))
-        .then(config.save)
+function add () {
+  console.log('Add new user record\n')
+  read({prompt: 'Identifier:'}, (err, id) => {
+    if (err) return handleError(err)
+    console.log('\nEnter property names like `user.email`')
+    readProperties((err, record) => {
+      if (err) return handleError(err)
+      config.add(id, record)
+      config.save()
         .then(confirm)
-        .catch(handleError);
-}
-
-function readProperty(prop) {
-    return q.Promise(function(resolve, reject) {
-        read({prompt:`${prop}:`}, function(error, result){
-            if (error) reject(error);
-            record[prop] = result;
-            resolve();
-        })
+        .catch(handleError)
     })
+  })
 }
 
-function confirm(){
-    console.log('\nrecord saved');
+function confirm () {
+  console.log('\nrecord saved')
 }
 
-function handleError(error){
-    console.error('\n'+error.message);
+function handleError (error) {
+  console.error('\n' + error.message)
 }

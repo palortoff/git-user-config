@@ -1,43 +1,51 @@
-'use strict';
+'use strict'
 
-let homeDir = require('home-dir');
-let qfs = require("q-io/fs");
+const fs = require('fs')
+const colorize = require('json-colorizer')
+const configPath = require('./configPath')
+const loadConfig = require('./loadConfig')
 
 module.exports = {
-    get: get,
-         save,
-         add,
-         remove
-};
-
-let configPath= homeDir('/.git-user-config.json');
-let config;
-load();
-
-function get() {
-    return config;
+  get: get,
+  save,
+  add,
+  update,
+  remove
 }
 
-function load() {
-    try {
-        config = require(configPath);
-    }
-    catch (e) {
-        config = {}
-    }
+const config = loadConfig()
+
+function get () {
+  return config
 }
 
-function save() {
-    return qfs.write(configPath, JSON.stringify(config));
+function save () {
+  console.debug('saving config to file')
+  return new Promise((resolve, reject) => {
+    fs.writeFile(configPath(), JSON.stringify(config), (err) => {
+      if (err) return reject(err)
+      resolve()
+    })
+  })
 }
 
-function add(record) {
-    if (config[record.id]) throw new Error(`Record "${record.id}" already exists.`);
-    config[record.id] = {name: record.name, email: record.email};
+function add (id, record) {
+  console.debug('adding record: %s', id)
+  console.debug('record: %s', colorize(JSON.stringify(record)))
+  if (config[id]) throw new Error(`Record "${id}" already exists.`)
+  update(id, record)
 }
 
-function remove(id) {
-    if (!config[id]) throw new Error(`Record "${id}" does not exist.`);
-    delete config[id];
+function update (id, record) {
+  console.debug('updating record: %s', id)
+  console.debug('record: %s', colorize(JSON.stringify(record)))
+  const _record = Object.assign({}, record)
+  if (_record.id) delete _record.id
+  config[id] = _record
 }
 
+function remove (id) {
+  console.debug('removing record: %s', id)
+  if (!config[id]) throw new Error(`Record "${id}" does not exist.`)
+  delete config[id]
+}

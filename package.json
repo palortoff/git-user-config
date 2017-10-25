@@ -3,16 +3,20 @@
   "version": "1.0.2",
   "description": "Configure your git user for current repo",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "standard | snazzy",
+    "test": "tap 'test/**/*.test.js'"
+  },
+  "precommit": [
+    "lint",
+    "test"
+  ],
   "author": "palortoff",
   "license": "MIT",
   "dependencies": {
-    "child-process-promise": "^1.1.0",
-    "home-dir": "^1.0.0",
-    "lodash": "^3.10.1",
+    "consoleplusplus": "^1.4.1",
+    "json-colorizer": "^1.1.0",
     "minimist": "^1.2.0",
-    "q": "^1.4.1",
-    "q-io": "^1.13.1",
     "read": "^1.0.7"
   },
   "bin": {
@@ -21,5 +25,13 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/palortoff/git-user-config"
+  },
+  "devDependencies": {
+    "clear-require": "^2.0.0",
+    "mock-require": "^2.0.2",
+    "pre-commit": "^1.2.2",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3",
+    "tap": "^10.7.2"
   }
 }

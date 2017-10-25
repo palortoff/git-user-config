@@ -1,10 +1,12 @@
-'use strict';
+'use strict'
 
-module.exports = list;
+module.exports = list
 
-var config = require('../config');
+const colorize = require('json-colorizer')
+const config = require('../config')
 
-function list() {
-    console.log('Saved records:')
-    console.log(JSON.stringify(config.get(), null, 2));
+function list () {
+  console.log('Saved records:')
+  const json = JSON.stringify(config.get(), null, 2)
+  console.log(colorize(json))
 }

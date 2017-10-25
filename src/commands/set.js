@@ -1,36 +1,42 @@
-'use strict';
+'use strict'
 
-let config = require('./../config');
-let exec = require('child-process-promise').exec;
+const config = require('../config')
+const exec = require('child_process').exec
 
-module.exports = set;
+module.exports = set
 
-function set(options) {
-    let id = options.set;
-    let user = config.get()[id];
-    if (!user || !user.name || !user.email) throw new Error(`User for ${id} not configured`);
+function set (options) {
+  const id = options.set
+  const obj = config.get()[id]
+  if (!obj) throw Error(`Config for ${id} not specified`)
 
-    setUserName(user)
-        .then(setUserEmail)
-        .then(confirm)
-        .catch(handleError);
+  Object.keys(obj).forEach((key) => {
+    setValue(key, obj[key], options.global)
+      .then(() => {})
+      .catch(handleError)
+  })
+  confirm(obj)
 }
 
-function setUserName(user) {
-    return exec(`git config user.name "${user.name}"`)
-        .then(function() {return user;});
+function setValue (prop, val, setGlobal) {
+  return new Promise((resolve, reject) => {
+    const cmd = `git config ${setGlobal ? '--global' : '--local'} ${prop} '${val}'`
+    const proc = exec(cmd)
+    let stderr = ''
+    proc.stderr.on('data', (d) => { stderr += d.toString() })
+    proc.on('error', (err) => reject(err))
+    proc.on('close', (code) => {
+      if (code !== 0) return reject(Error(`Invalid result code (${code}):\n${stderr}`))
+      resolve()
+    })
+  })
 }
 
-function setUserEmail(user) {
-    return exec(`git config user.email ${user.email}`)
-        .then(function() {return user;});
+function confirm (configuration) {
+  console.log('configuration applied:')
+  console.log(JSON.stringify(configuration, null, 2))
 }
 
-function confirm(user) {
-    console.log("user configured:");
-    console.log(JSON.stringify(user, null, 2));
-}
-
-function handleError(error) {
-    console.error('\n' + error.message);
+function handleError (error) {
+  console.error('\n' + error.message)
 }
